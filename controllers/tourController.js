@@ -5,7 +5,7 @@ const AppError = require('../utils/appError');
 exports.alliasTopTours = (req, res, next) => {
   req.query.limit = '5';
   // descending in ratingsAverage and Accending in price
-  req.query.sort = '-ratingsAverage,price';
+  req.query.sort = '-ratingsAverage price';
 
   req.query.fields = 'name, price, ratingsAverage, summary, difficulty';
   next();
@@ -13,6 +13,7 @@ exports.alliasTopTours = (req, res, next) => {
 
 // Routes Handler
 exports.getAllTours = catchAsync(async (req, res, next) => {
+  // here find() has no effect although if you are not using filter you must write find()
   const features = new APIFeatures(Tour.find(), req.query)
     .filter()
     .sort()
@@ -29,6 +30,7 @@ exports.getAllTours = catchAsync(async (req, res, next) => {
     },
   });
 });
+
 exports.getTour = catchAsync(async (req, res, next) => {
   // ** 200 means ok
 
@@ -56,7 +58,7 @@ exports.createTour = catchAsync(async (req, res, next) => {
 
 exports.updateTour = catchAsync(async (req, res, next) => {
   const tour = await Tour.findByIdAndUpdate(req.params.id, req.body, {
-    new: true,
+    new: true, // to return updated document
     runValidators: true,
   });
   if (!tour) {

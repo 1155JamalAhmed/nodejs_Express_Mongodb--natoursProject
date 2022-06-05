@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
-const slugify = require('slugify');
-const validator = require('validator');
+
+// const slugify = require('slugify');
+// const validator = require('validator');
 
 // ** Schema is the validation for model
 
@@ -122,12 +123,5 @@ tourSchema.pre('aggregate', function (next) {
 
 // ** creating a model which is the bluprint for documents
 const Tour = mongoose.model('Tour', tourSchema);
-
-// ** creating a document
-// const testTour = new Tour({
-//   name: 'The Park Camper',
-//   rating: 4.7,
-//   price: 497,
-// });
 
 module.exports = Tour;

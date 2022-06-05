@@ -7,6 +7,7 @@ process.on('uncaughtException', (err) => {
   process.exit(1);
 });
 
+
 dotenv.config({ path: './config.env' });
 const app = require('./app');
 
@@ -23,10 +24,8 @@ mongoose
     useFindAndModify: false,
   })
   .then(() => console.log('DB connection successful...!'));
-
-// ** Environment variables are global variables that are used to define the environment in which
-//  ** the node application is running
-// console.log('This is the environment: ', app.get('env'));
+  
+// ** Display environment on terminal
 console.log('Environment: ', process.env.NODE_ENV);
 
 const port = process.env.PORT;
@@ -36,6 +35,8 @@ const server = app.listen(port, () => {
   console.log(`App running on port ${port}...`);
 });
 
+
+// ** catching unhandled rejection
 process.on('unhandledRejection', (err) => {
   console.log('Unhandled rejection! Shutting down');
   console.log(err);
