@@ -1,9 +1,11 @@
 const User = require('../models/userModel');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
+const factory = require('./handlerFactory');
 
 const filterObj = (obj, ...allowedFields) => {
   const newObj = {};
+  console.log(Object.keys(obj));
   Object.keys(obj).forEach((el) => {
     if (allowedFields.includes(el)) {
       newObj[el] = obj[el];
@@ -25,6 +27,11 @@ exports.getAllUsers = catchAsync(async (req, res, next) => {
   });
 });
 
+exports.getMe = (req, res, next) => {
+  req.params.id = req.user.id;
+  next();
+};
+
 exports.updateMe = catchAsync(async (req, res, next) => {
   // ** 1) Create error if user POSTs password data
   if (req.body.password || req.body.passwordConfirm) {
@@ -36,9 +43,9 @@ exports.updateMe = catchAsync(async (req, res, next) => {
     );
   }
 
-  // ** 2) Filtered out unwanted field names that are not allowed to be updated
+  // ** 2) Filtered out unwanted field names only allow name and email to bee updated
   const filteredBody = filterObj(req.body, 'name', 'email');
-  // ** 3) Update user document
+  // ** 3) Update user document (user is bind with req object by authenticationController.protect middleware)
   const updatedUser = await User.findByIdAndUpdate(req.user.id, filteredBody, {
     new: true,
     runValidators: true,
@@ -56,7 +63,7 @@ exports.createUser = (req, res) => {
   // ** 500 means internal server error
   res.status(500).json({
     status: 'error',
-    message: 'This route is not yet defined',
+    message: 'This route is not yet defined! Please use /signup instead',
   });
 };
 
@@ -68,26 +75,9 @@ exports.deleteMe = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.getUser = (req, res) => {
-  // ** 500 means internal server error
-  res.status(500).json({
-    status: 'error',
-    message: 'This route is not yet defined',
-  });
-};
+exports.getUser = factory.getOne(User);
 
-exports.updateUser = (req, res) => {
-  // ** 500 means internal server error
-  res.status(500).json({
-    status: 'error',
-    message: 'This route is not yet defined',
-  });
-};
+// ** do not update password with this!
+exports.updateUser = factory.updateOne(User);
 
-exports.deleteUser = (req, res) => {
-  // ** 500 means internal server error
-  res.status(500).json({
-    status: 'error',
-    message: 'This route is not yet defined',
-  });
-};
+exports.deleteUser = factory.deleteOne(User);

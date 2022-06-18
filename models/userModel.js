@@ -22,7 +22,7 @@ const userSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    enum: ['user', 'guide', 'lead-gudie', 'admin'],
+    enum: ['user', 'guide', 'lead-guide', 'admin'],
     default: 'user',
   },
   password: {
@@ -57,7 +57,6 @@ const userSchema = new mongoose.Schema({
 // ** Document MiddleWare:  runs before .save() and .create()
 userSchema.pre('save', async function (next) {
   if (!this.isModified('password')) return next();
-
   this.password = await bcrypt.hash(this.password, 12);
 
   this.passwordConfirm = undefined;
@@ -65,15 +64,14 @@ userSchema.pre('save', async function (next) {
 });
 
 userSchema.pre('save', function (next) {
-  if (!this.isModified('password') || this.new) return next();
-  // ** subtracting 1000 because sometime JWT is issued before the document is saved!
-  // ** Hence, the user will not be able to use it if we don't subtract 1s.
-  this.passwordChangedAt = Date.now() - 1000;
+  if (!this.isModified('password') || this.isNew) return next();
+  this.passwordChangedAt = Date.now();
   next();
 });
 
 userSchema.pre(/^find/, function (next) {
   this.find({ active: { $ne: false } });
+
   next();
 });
 

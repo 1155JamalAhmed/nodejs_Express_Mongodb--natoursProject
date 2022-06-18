@@ -1,7 +1,9 @@
 class APIFeatures {
+  // ** queryString is the part of url after ?
   constructor(query, queryString) {
     this.query = query;
     this.queryString = queryString;
+    console.log('queryString: ', this.queryString);
   }
 
   filter() {
@@ -9,15 +11,11 @@ class APIFeatures {
     const excludedFields = ['page', 'sort', 'limit', 'fields'];
     excludedFields.forEach((excludedField) => delete queryObj[excludedField]);
 
-    // ** method #01 of writing a query
-    // const tour = await Tour.find(req.query);
-
     // Advanced Filtering
     let queryStr = JSON.stringify(queryObj);
     queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
 
     this.query = this.query.find(JSON.parse(queryStr));
-    // console.log(JSON.parse(queryStr));
     return this;
   }
 
@@ -26,7 +24,8 @@ class APIFeatures {
       const sortBy = this.queryString.sort.split(',').join(' ');
       this.query = this.query.sort(sortBy);
     } else {
-      this.query = this.query.sort('-createdAt _id');
+      this.query = this.query.sort('-createdAt');
+      // this.query = this.query.sort('-createdAt _id');
     }
     return this;
   }
