@@ -14,6 +14,7 @@ const globalErrorHandler = require('./controllers/errorController');
 
 const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
+const reviewRouter = require('./routes/reviewRoutes')
 
 const app = express();
 
@@ -44,11 +45,11 @@ app.use(
   })
 );
 
-// ** Data sanitization 
+// ** Data sanitization
 // ** 1) ->  NoSQL query injection handled
 app.use(mongoSanitize());
 
-// ** 2) -> XSS handled 
+// ** 2) -> XSS handled
 app.use(xss());
 
 // ** prevent parameter pollution (same paramter with different value ?sort=duration&sort=price)
@@ -77,6 +78,7 @@ app.use((req, res, next) => {
 
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
+// app.use('/api/v1/reviews', reviewRouter);
 
 // ** all other routes than the defined above will lead to this error route
 app.all('*', (req, res, next) => {

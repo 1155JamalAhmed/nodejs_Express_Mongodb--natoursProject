@@ -28,6 +28,7 @@ const createSendToken = (user, statusCode, res) => {
 
   // ** remove passsword from the output
   user.password = undefined;
+
   res.status(statusCode).json({
     status: 'success',
     token,
@@ -43,18 +44,9 @@ exports.signup = catchAsync(async (req, res, next) => {
     email: req.body.email,
     password: req.body.password,
     passwordConfirm: req.body.passwordConfirm,
-    passwordChangedAt: req.body.passwordChangedAt,
+    role: req.body.role,
   });
 
-  // const token = signToken(newUser._id);
-
-  // res.status(201).json({
-  //   status: 'success',
-  //   token,
-  //   data: {
-  //     user: newUser,
-  //   },
-  // });
   createSendToken(newUser, 201, res);
 });
 
@@ -67,22 +59,15 @@ exports.login = catchAsync(async (req, res, next) => {
   }
 
   // ** 2 check if user exists && password is correct
-  // ** because the password is select: false in userModel hence, we explicitly
-  // ** have to ask for password
+  /* ** because the password is select: false in userModel hence, we explicitly
+  have to ask for password ** */
   const user = await User.findOne({ email }).select('+password');
-  console.log(user);
 
   if (!user || !(await user.correctPassword(password, user.password))) {
     return next(new AppError('Incorrect email or password', 401));
   }
 
-  // ** if everything ok, then send the token
-
-  // const token = signToken(user._id);
-  // res.status(200).json({
-  //   status: 'success',
-  //   token,
-  // });
+  // ** 3 if everything ok, then send the token
   createSendToken(user, 200, res);
 });
 
@@ -153,6 +138,9 @@ exports.restrictTo = (...roles) => {
 
 exports.forgotPassword = catchAsync(async (req, res, next) => {
   // ** 1) Get user by his email
+  if (!req.body.email) {
+    return next(new AppError('Please provide your email', 400));
+  }
 
   const user = await User.findOne({ email: req.body.email });
 

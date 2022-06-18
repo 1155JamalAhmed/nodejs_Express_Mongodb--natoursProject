@@ -11,7 +11,7 @@ const sendEmail = async (options) => {
     //! Activate in gmail 'less secure app' option
     */
 
-  // ** using mailTrap for fake email sending
+  // ** 1) using mailTrap for fake email sending (Transporter creation)
   const transporter = nodemailer.createTransport({
     host: process.env.EMAIL_HOST,
     port: process.env.EMAIL_PORT,
