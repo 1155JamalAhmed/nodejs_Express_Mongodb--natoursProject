@@ -19,6 +19,7 @@ const userRouter = require('./routes/userRoutes');
 const reviewRouter = require('./routes/reviewRoutes');
 const viewRouter = require('./routes/viewRoutes');
 const bookingRouter = require('./routes/bookingRoutes');
+const compression = require('compression');
 const app = express();
 
 app.set('view engine', 'pug');
@@ -82,6 +83,8 @@ app.use(
     ],
   })
 );
+
+app.use(compression());
 
 // ** a middleware to connect date to the incommming request
 app.use((req, res, next) => {
