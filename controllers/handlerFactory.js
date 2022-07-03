@@ -16,7 +16,7 @@ exports.deleteOne = (Modal) => {
   });
 };
 
-exports.updateOne = () =>
+exports.updateOne = (Modal) =>
   catchAsync(async (req, res, next) => {
     const doc = await Modal.findByIdAndUpdate(req.params.id, req.body, {
       new: true, // to return updated document
