@@ -1,6 +1,6 @@
 const express = require('express');
 const morgan = require('morgan');
-
+const path = require('path');
 // ** import for security purposes
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
@@ -9,17 +9,26 @@ const xss = require('xss-clean');
 const hpp = require('hpp');
 /** ----------------------------- **/
 
+const cookieParser = require('cookie-parser');
+
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
 
 const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
-const reviewRouter = require('./routes/reviewRoutes')
-
+const reviewRouter = require('./routes/reviewRoutes');
+const viewRouter = require('./routes/viewRoutes');
+const bookingRouter = require('./routes/bookingRoutes');
 const app = express();
 
+app.set('view engine', 'pug');
+app.set('views', path.join(__dirname, 'views'));
+
+// ** It is for static file routing
+app.use(express.static(path.join(__dirname, 'public')));
+
 // ** make HTTP headers secure
-app.use(helmet());
+app.use(helmet.crossOriginResourcePolicy({ policy: 'cross-origin' }));
 
 // ** set limit on request from same IP -> brute force handled
 const limiter = rateLimit({
@@ -44,6 +53,13 @@ app.use(
     limit: '10kb',
   })
 );
+app.use(
+  express.urlencoded({
+    extended: true,
+    limit: '10kb',
+  })
+);
+app.use(cookieParser());
 
 // ** Data sanitization
 // ** 1) ->  NoSQL query injection handled
@@ -67,18 +83,17 @@ app.use(
   })
 );
 
-// ** It is for static file routing
-app.use(express.static(`${__dirname}/public`));
-
 // ** a middleware to connect date to the incommming request
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();
   next();
 });
 
+app.use('/', viewRouter);
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
-// app.use('/api/v1/reviews', reviewRouter);
+app.use('/api/v1/reviews', reviewRouter);
+app.use('/api/v1/bookings', bookingRouter);
 
 // ** all other routes than the defined above will lead to this error route
 app.all('*', (req, res, next) => {
