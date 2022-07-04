@@ -52,3 +52,7 @@ SENDGRID_PASSWORD=
 
 STRIPE_SECRET_KEY=
 STRIPE_WEBHOOK_SECRET=
+
+
+THIS WEBSITE IS HOSTED ON:
+https://awesomenatrous.herokuapp.com/
