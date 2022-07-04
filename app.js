@@ -19,10 +19,10 @@ const userRouter = require('./routes/userRoutes');
 const reviewRouter = require('./routes/reviewRoutes');
 const viewRouter = require('./routes/viewRoutes');
 const bookingRouter = require('./routes/bookingRoutes');
+const bookingController = require('./routes/bookingController');
 const compression = require('compression');
 const cors = require('cors');
 const app = express();
-
 app.enable('trust proxy');
 
 app.set('view engine', 'pug');
@@ -40,8 +40,7 @@ app.use(cors());
 //   origin: 'https://www.natours.com'
 // }))
 
-app.options('*', cors())
-
+app.options('*', cors());
 
 // ** make HTTP headers secure
 app.use(helmet.crossOriginResourcePolicy({ policy: 'cross-origin' }));
@@ -53,6 +52,8 @@ const limiter = rateLimit({
   message: 'Too many request from this IP, Please try again in an hour!',
 });
 app.use('/api', limiter);
+
+app.post('/webhook-checkout');
 
 //  middlewares
 // ** development logging
