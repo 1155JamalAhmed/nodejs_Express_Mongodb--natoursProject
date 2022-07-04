@@ -20,6 +20,7 @@ const reviewRouter = require('./routes/reviewRoutes');
 const viewRouter = require('./routes/viewRoutes');
 const bookingRouter = require('./routes/bookingRoutes');
 const compression = require('compression');
+const cors = require('cors');
 const app = express();
 
 app.enable('trust proxy');
@@ -29,6 +30,18 @@ app.set('views', path.join(__dirname, 'views'));
 
 // ** It is for static file routing
 app.use(express.static(path.join(__dirname, 'public')));
+
+// ** Implement CORS
+app.use(cors());
+// Access-Control-Allow-Origin *
+
+// api.natours.com, front-end natours.com
+// app.use(cors({
+//   origin: 'https://www.natours.com'
+// }))
+
+app.options('*', cors())
+
 
 // ** make HTTP headers secure
 app.use(helmet.crossOriginResourcePolicy({ policy: 'cross-origin' }));
