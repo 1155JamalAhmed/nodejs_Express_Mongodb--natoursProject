@@ -3,7 +3,6 @@ const Tour = require('../models/tourModel');
 const User = require('../models/userModel');
 const Booking = require('../models/bookingModel');
 const catchAsync = require('../utils/catchAsync');
-const AppError = require('../utils/appError');
 const factory = require('./handlerFactory');
 
 exports.getCheckoutSession = catchAsync(async (req, res, next) => {
@@ -55,12 +54,8 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
 
 const createBookingCheckout = async (session) => {
   const tour = session.client_reference_id;
-  console.log('Session', session);
-  console.log('tour: ', tour);
   const user = (await User.findOne({ email: session.customer_email }))._id;
-  console.log('user: ', user);
   const price = session.amount_total / 100;
-  console.log('price: ', price);
   await Booking.create({
     tour,
     user,
