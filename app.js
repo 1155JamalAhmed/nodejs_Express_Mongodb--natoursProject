@@ -19,7 +19,7 @@ const userRouter = require('./routes/userRoutes');
 const reviewRouter = require('./routes/reviewRoutes');
 const viewRouter = require('./routes/viewRoutes');
 const bookingRouter = require('./routes/bookingRoutes');
-const bookingController = require('./routes/bookingController');
+const bookingController = require('./controllers/bookingController');
 const compression = require('compression');
 const cors = require('cors');
 const app = express();
@@ -53,7 +53,11 @@ const limiter = rateLimit({
 });
 app.use('/api', limiter);
 
-app.post('/webhook-checkout');
+app.post(
+  '/webhook-checkout',
+  express.raw({ type: 'application/json' }),
+  bookingController.webhookCheckout
+);
 
 //  middlewares
 // ** development logging
