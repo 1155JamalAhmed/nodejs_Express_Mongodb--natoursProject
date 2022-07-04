@@ -56,3 +56,6 @@ STRIPE_WEBHOOK_SECRET=
 
 THIS WEBSITE IS HOSTED ON:
 https://awesomenatrous.herokuapp.com/
+
+The api documentation is now available at:
+https://documenter.getpostman.com/view/19691517/UzBmLmwH
