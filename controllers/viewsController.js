@@ -5,6 +5,15 @@ const AppError = require('../utils/appError');
 const User = require('../models/userModel');
 const mongoose = require('mongoose');
 
+exports.alerts = (req, res, next) => {
+  const { alert } = req.query;
+  if (alert === 'booking') {
+    res.locals.alert =
+      "Your booking was successfull! Please check your email for a confirmation. If your booking doesn't show up here immediatly, please come back later.";
+    next();
+  }
+};
+
 exports.getOverview = catchAsync(async (req, res, next) => {
   // ** 1) Get tour data from collection
   const tours = await Tour.find();
@@ -48,16 +57,15 @@ exports.getMyTours = catchAsync(async (req, res, next) => {
   });
 
   // ** 2) Find Tours with the returned Ids
-  const tourIDs = toursBookedByMe.map(el => el.tour);
+  const tourIDs = toursBookedByMe.map((el) => el.tour);
   const tours = await Tour.find({
-    _id: {$in: tourIDs}
-  })
+    _id: { $in: tourIDs },
+  });
 
   res.status(200).render('overview', {
     title: 'My Tours',
-    tours
-  })
-
+    tours,
+  });
 });
 
 exports.updateUserData = async (req, res) => {
