@@ -24,3 +24,31 @@ Key Points:
 4) we have used express to create routes and used req, res cycle by express...
 
 5) an all route middle ware is present to handle all other routes than the defined above.
+
+The env vaiables are:
+
+NODE_ENV=development
+PORT=3000
+USER=
+password=
+
+DATABASE=
+DATABASE_LOCAL=
+DATABASE_PASSWORD=
+
+JWT_SECRET=
+JWT_EXPIRES_IN=90d
+JWT_COOKIE_EXPIRES_IN=90
+
+EMAIL_USERNAME=
+EMAIL_PASSWORD=
+EMAIL_HOST=
+EMAIL_PORT=
+
+EMAIL_FROM=
+
+SENDGRID_USERNAME=
+SENDGRID_PASSWORD=
+
+STRIPE_SECRET_KEY=
+STRIPE_WEBHOOK_SECRET=
