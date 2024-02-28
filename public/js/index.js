@@ -71,7 +71,7 @@ if (logOutBtn) {
 
 if (bookBtn) {
   bookBtn.addEventListener('click', (e) => {
-    e.target.textontent = 'Processing...';
+    e.target.textContent = 'Processing...';
     const { tourId } = e.target.dataset;
     bookTour(tourId);
   });
